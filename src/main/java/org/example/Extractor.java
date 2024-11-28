@@ -171,6 +171,4 @@ public class Extractor {
         IngrList.printList();
     }
 
-
-
 }
