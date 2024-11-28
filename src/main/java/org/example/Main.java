@@ -20,10 +20,14 @@ public class Main {
             Extractor extractor = new Extractor();
 
             String s = extractor.readFileContent(args[0]);
+            extractor.setFilePath(args[0]);
             extractor.ExtractIngredieant(s);
             extractor.ExtractCookware(s);
             extractor.ExtractTime(s);
+            extractor.ExtractStep();
             extractor.print();
+
+
 
 
 
@@ -48,8 +52,10 @@ public class Main {
 
             }
 
-            extractor.print();
+            extractor.printGroceries();
         }
+
+
 
     }
 }

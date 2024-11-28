@@ -1,14 +1,26 @@
 package org.example;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Extractor {
     private String filePath;
-    IngredientList list = new IngredientList(50);
+    IngredientList IngrList = new IngredientList(50);
+    CookwareList CookwareList = new CookwareList(50);
+    Time timeCurr = new Time();
+    ArrayList<Steps> steps = new ArrayList<>();
 
     public Extractor () {
+        this.filePath = filePath;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
         this.filePath = filePath;
     }
 
@@ -45,13 +57,13 @@ public class Extractor {
                 curr.setQuantity(m1.group(2));
                 curr.setUnit(m1.group(3));
 
-                if (list.nameExists(curr.getName())) {
-                    int j = list.getPosition(curr.getName());
-                    int quan = Integer.parseInt(curr.getQuantity()) + Integer.parseInt(list.getIngredient(j).getQuantity());
+                if (IngrList.nameExists(curr.getName())) {
+                    int j = IngrList.getPosition(curr.getName());
+                    int quan = Integer.parseInt(curr.getQuantity()) + Integer.parseInt(IngrList.getIngredient(j).getQuantity());
                     String quantity = Integer.toString(quan);
-                    list.getIngredient(j).setQuantity(quantity);
+                    IngrList.getIngredient(j).setQuantity(quantity);
                 } else {
-                    list.addIngredient(curr, i);
+                    IngrList.addIngredient(curr, i);
                     i++;
                 }
             }
@@ -60,8 +72,8 @@ public class Extractor {
                 Ingredient curr = new Ingredient();
                 curr.setName(m1.group(4));
 
-                if (!list.nameExists(curr.getName())) {
-                    list.addIngredient(curr, i);
+                if (!IngrList.nameExists(curr.getName())) {
+                    IngrList.addIngredient(curr, i);
                     i++;
                 }
             }
@@ -71,8 +83,6 @@ public class Extractor {
     }
 
     public void ExtractCookware (String content) throws IOException {
-        CookwareList list = new CookwareList(50);
-
 
         String pattern2 = "#([α-ωΑ-Ωά-ώΆ-Ώ\\s]{1,})+\\{+\\}|\\#([α-ωΑ-Ωά-ώΆ-Ώ]{1,})+\\{?+\\}?";
         Pattern p2 = Pattern.compile(pattern2);
@@ -85,10 +95,10 @@ public class Extractor {
                 Cookware curr = new Cookware();
                 curr.setName(m2.group(1));
 
-                if (list.exists(curr.getName())) {
+                if (CookwareList.exists(curr.getName())) {
                     continue;
                 } else {
-                    list.add(curr, j);
+                    CookwareList.add(curr, j);
                     j++;
                 }
             }
@@ -97,16 +107,15 @@ public class Extractor {
                 Cookware curr = new Cookware();
                 curr.setName(m2.group(2));
 
-                if (list.exists(curr.getName())) {
+                if (CookwareList.exists(curr.getName())) {
                     continue;
                 } else {
-                    list.add(curr, j);
+                    CookwareList.add(curr, j);
                     j++;
                 }
             }
         }
 
-        list.printList();
 
     }
 
@@ -115,8 +124,6 @@ public class Extractor {
         String pattern3 = "~\\{+([\\d]{1,})+\\%+([a-zA-Z]{1,})+\\}";
         Pattern p3 = Pattern.compile(pattern3);
         Matcher m3 = p3.matcher(content);
-
-        Time timeCurr = new Time();
 
         while (m3.find()) {
             if (m3.group(1) != null) {
@@ -130,12 +137,38 @@ public class Extractor {
             }
         }
 
-        System.out.println("\nΣυνολική Ώρα:\n" + timeCurr.getTime() + " " + timeCurr.getUnit());
+    }
+
+    public void ExtractStep() throws IOException {
+
+        File file = new File(filePath);
+        BufferedReader br = new BufferedReader(new FileReader(file));
+
+        while (br.read() != -1) {
+            Steps curr = new Steps();
+            curr.setStep(br.readLine());
+            steps.add(curr);
+        }
+
     }
 
     public void print() {
 
-        list.printList();
+        IngrList.printList();
+        CookwareList.printList();
+        System.out.println("\nΣυνολική Ώρα:\n" + timeCurr.getTime() + " " + timeCurr.getUnit()+"\n");
+
+        int i = 1;
+        System.out.println("Βήματα:");
+        for(Steps s : steps) {
+            System.out.println(i+". "+ s.getStep()+"\n");
+            i++;
+        }
+
+    }
+
+    public void printGroceries() {
+        IngrList.printList();
     }
 
 
