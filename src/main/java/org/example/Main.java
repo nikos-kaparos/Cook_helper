@@ -28,7 +28,7 @@ public class Main {
             extractor.print();
 
 
-        } else if (args[0].equals("-list") && args.length >= 3) {
+        } else if (args[0].equals("-list") && args.length > 2) {
 
             Extractor extractor = new Extractor();
 

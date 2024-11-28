@@ -57,11 +57,13 @@ public class Extractor {
                 curr.setQuantity(m1.group(2));
                 curr.setUnit(m1.group(3));
 
-                if (IngrList.nameExists(curr.getName())) {
+                if (IngrList.nameExists(curr.getName()) && m1.group(2) != null) {
                     int j = IngrList.getPosition(curr.getName());
                     int quan = Integer.parseInt(curr.getQuantity()) + Integer.parseInt(IngrList.getIngredient(j).getQuantity());
                     String quantity = Integer.toString(quan);
                     IngrList.getIngredient(j).setQuantity(quantity);
+                } else if (IngrList.nameExists(curr.getName())) {
+                    continue;
                 } else {
                     IngrList.addIngredient(curr, i);
                     i++;
