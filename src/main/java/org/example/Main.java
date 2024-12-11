@@ -24,7 +24,7 @@ public class Main {
             extractor.ExtractIngredieant(s);
             extractor.ExtractCookware(s);
             extractor.ExtractTime(s);
-            extractor.ExtractStep();
+//            extractor.ExtractStep();
             extractor.print();
 
 

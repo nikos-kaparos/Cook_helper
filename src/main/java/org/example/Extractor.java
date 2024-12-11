@@ -59,13 +59,13 @@ public class Extractor {
 
                 if (IngrList.nameExists(curr.getName()) && m1.group(2) != null) {
                     int j = IngrList.getPosition(curr.getName());
-                    int quan = Integer.parseInt(curr.getQuantity()) + Integer.parseInt(IngrList.getIngredient(j).getQuantity());
+                    int quan = Integer.parseInt(curr.getQuantity()) + Integer.parseInt(IngrList.getItem(j).getQuantity());
                     String quantity = Integer.toString(quan);
-                    IngrList.getIngredient(j).setQuantity(quantity);
+                    IngrList.getItem(j).setQuantity(quantity);
                 } else if (IngrList.nameExists(curr.getName())) {
                     continue;
                 } else {
-                    IngrList.addIngredient(curr, i);
+                    IngrList.addItem(curr, i);
                     i++;
                 }
             }
@@ -75,7 +75,7 @@ public class Extractor {
                 curr.setName(m1.group(4));
 
                 if (!IngrList.nameExists(curr.getName())) {
-                    IngrList.addIngredient(curr, i);
+                    IngrList.addItem(curr, i);
                     i++;
                 }
             }
@@ -100,7 +100,7 @@ public class Extractor {
                 if (CookwareList.exists(curr.getName())) {
                     continue;
                 } else {
-                    CookwareList.add(curr, j);
+                    CookwareList.addItem(curr, j);
                     j++;
                 }
             }
@@ -112,7 +112,7 @@ public class Extractor {
                 if (CookwareList.exists(curr.getName())) {
                     continue;
                 } else {
-                    CookwareList.add(curr, j);
+                    CookwareList.addItem(curr, j);
                     j++;
                 }
             }
