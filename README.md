@@ -16,11 +16,11 @@ mvn clean package
 ## Usage
 Run 
 ```bash
-java -jar example-jar.jar <file>
+java -jar OOP2_PROJECT-1.0-SNAPSHOT.jar <file>
 ```
 Run many files 
 ```bash
-java -jar example-jar.jar -list <file1> <file2>
+java -jar OOP2_PROJECT-1.0-SNAPSHOT.jar -list <file1> <file2>
 ```
 
 ## Features
