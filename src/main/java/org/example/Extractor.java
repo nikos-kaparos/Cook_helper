@@ -11,16 +11,9 @@ public class Extractor {
     CookwareList CookwareList = new CookwareList(50);
     Time timeCurr = new Time();
     ArrayList<Steps> steps = new ArrayList<>();
+    int counter = 0;
 
     public Extractor () {
-        this.filePath = filePath;
-    }
-
-    public String getFilePath() {
-        return filePath;
-    }
-
-    public void setFilePath(String filePath) {
         this.filePath = filePath;
     }
 
@@ -36,7 +29,7 @@ public class Extractor {
         br.close();
 
         return content.toString();
-    }    
+    }
 
     public void ExtractIngredieant(String content) throws IOException {
 
@@ -44,8 +37,6 @@ public class Extractor {
         String pattern1 = "@([α-ωΑ-Ωά-ώΆ-Ώ\\s]{1,})+\\{([\\d]{1,})?+\\%?+([α-ωΑ-Ωά-ώΆ-Ώa-zA-z]{1,})?+\\}|\\@([α-ωΑ-Ωά-ώΆ-Ώ]{1,})";
         Pattern p1 = Pattern.compile(pattern1);
         Matcher m1 = p1.matcher(content);
-
-        int i = 0;
 
         // Filling The list with the matching items
         while (m1.find()) {
@@ -56,7 +47,6 @@ public class Extractor {
                 curr.setName(m1.group(1));
                 curr.setQuantity(m1.group(2));
                 curr.setUnit(m1.group(3));
-
                 if (IngrList.nameExists(curr.getName()) && m1.group(2) != null) {
                     int j = IngrList.getPosition(curr.getName());
                     int quan = Integer.parseInt(curr.getQuantity()) + Integer.parseInt(IngrList.getItem(j).getQuantity());
@@ -65,18 +55,17 @@ public class Extractor {
                 } else if (IngrList.nameExists(curr.getName())) {
                     continue;
                 } else {
-                    IngrList.addItem(curr, i);
-                    i++;
+                    IngrList.addItem(curr, counter);
+                    counter++;
                 }
             }
 
             if (m1.group(4) != null) {
                 Ingredient curr = new Ingredient();
                 curr.setName(m1.group(4));
-
                 if (!IngrList.nameExists(curr.getName())) {
-                    IngrList.addItem(curr, i);
-                    i++;
+                    IngrList.addItem(curr, counter);
+                    counter++;
                 }
             }
 
