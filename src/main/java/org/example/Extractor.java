@@ -162,4 +162,52 @@ public class Extractor {
         IngrList.printList();
     }
 
+
+    public String getFormattedOutput() {
+        StringBuilder output = new StringBuilder();
+
+        // Ingredients
+        output.append("Υλικά:")
+                .append("\n--------------------\n");
+        for (int i = 0; i < IngrList.getSize(); i++) {
+            Ingredient ingredient = IngrList.getItem(i);
+            if (ingredient != null) {
+                output.append("- ")
+                        .append(ingredient.getName());
+                if (ingredient.getQuantity() != null) {
+                    output.append(" (").append(ingredient.getQuantity());
+                    if (ingredient.getUnit() != null) {
+                        output.append(" ").append(ingredient.getUnit());
+                    }
+                    output.append(")");
+                }
+                output.append("\n");
+            }
+        }
+
+        // Cookware
+        output.append("\nΣκεύη:")
+                .append("\n--------------------\n");
+        for (int i = 0; i < CookwareList.getSize(); i++) {
+            Cookware cookware = CookwareList.getItem(i);
+            if (cookware != null) {
+                output.append("- ").append(cookware.getName()).append("\n");
+            }
+        }
+
+        // Total Time
+        output.append("\nΣυνολικός Χρόνος:")
+                .append("\n--------------------\n")
+                .append(timeCurr.getTime()).append(" ").append(timeCurr.getUnit()).append("\n\n");
+
+        // Steps
+        output.append("Βήματα:")
+                .append("\n--------------------\n");
+        for (int i = 0; i < steps.size(); i++) {
+            Steps step = steps.get(i);
+            output.append((i + 1)).append(". ").append(step.getStep()).append("\n");
+        }
+
+        return output.toString();
+    }
 }
