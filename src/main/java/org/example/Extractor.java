@@ -14,6 +14,15 @@ public class Extractor {
     int counter = 0;
 
     public Extractor () {
+        this.steps = steps;
+        this.filePath = filePath;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
         this.filePath = filePath;
     }
 
@@ -132,7 +141,7 @@ public class Extractor {
 
     public void ExtractStep() throws IOException {
 
-        File file = new File(filePath);
+        File file = new File(getFilePath());
         BufferedReader br = new BufferedReader(new FileReader(file));
 
         while (br.read() != -1) {
@@ -141,6 +150,24 @@ public class Extractor {
             steps.add(curr);
         }
 
+    }
+
+    public long returnTime(String content) throws IOException {
+
+        Time curr = new Time();
+        curr.setTime(0);
+
+        String pattern3 = "~\\{+([\\d]{1,})+\\%+([a-zA-Z]{1,})+\\}";
+        Pattern p3 = Pattern.compile(pattern3);
+        Matcher m3 = p3.matcher(content);
+
+        while (m3.find()) {
+            if (m3.group(1) != null) {
+                curr.setTime(Integer.parseInt(m3.group(1)));
+            }
+        }
+
+        return curr.getTime();
     }
 
     public void print() {
@@ -206,6 +233,31 @@ public class Extractor {
         for (int i = 0; i < steps.size(); i++) {
             Steps step = steps.get(i);
             output.append((i + 1)).append(". ").append(step.getStep()).append("\n");
+        }
+
+        return output.toString();
+    }
+
+    public String getListOutput() {
+        StringBuilder output = new StringBuilder();
+
+        // Ingredients
+        output.append("Υλικά:")
+                .append("\n--------------------\n");
+        for (int i = 0; i < IngrList.getSize(); i++) {
+            Ingredient ingredient = IngrList.getItem(i);
+            if (ingredient != null) {
+                output.append("- ")
+                        .append(ingredient.getName());
+                if (ingredient.getQuantity() != null) {
+                    output.append(" (").append(ingredient.getQuantity());
+                    if (ingredient.getUnit() != null) {
+                        output.append(" ").append(ingredient.getUnit());
+                    }
+                    output.append(")");
+                }
+                output.append("\n");
+            }
         }
 
         return output.toString();
