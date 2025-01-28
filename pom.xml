@@ -7,9 +7,22 @@
     <groupId>org.example</groupId>
     <artifactId>OOP2_PROJECT</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <dependencies>
+        <dependency>
+            <groupId>gr.hua.dit.oop2</groupId>
+            <artifactId>countdown</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+    </dependencies>
+    <repositories>
+        <repository>
+            <id>gitlab-maven</id>
+            <url>https://gitlab.com/api/v4/projects/41008035/packages/maven</url>
+        </repository>
+    </repositories>
     <build>
         <plugins>
-        <!-- Plugin για να δημιουργήσουμε εκτελέσιμο JAR -->
+            <!-- Plugin για να δημιουργήσουμε εκτελέσιμο JAR -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -22,6 +35,19 @@
                         </manifest>
                     </archive>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.4.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
