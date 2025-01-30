@@ -167,7 +167,7 @@ public class Extractor {
             }
         }
 
-        return curr.getTime();
+        return curr.getTime()*60;
     }
 
     public void print() {
