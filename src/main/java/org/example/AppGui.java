@@ -1,8 +1,6 @@
 package org.example;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,8 +15,13 @@ import gr.hua.dit.oop2.countdown.Notifier;
 
 public class AppGui {
 
-    private static DefaultListModel<File> recipeListModel = new DefaultListModel<>();
-    private static JList<File> recipeList = new JList<>(recipeListModel);
+    private static final DefaultListModel<File> recipeListModel = new DefaultListModel<>();
+    private static final JList<File> recipeList = new JList<>(recipeListModel);
+    // Δημιουργία buttons
+    private static final JButton loadRecipesButton = new JButton("Φόρτωση Συνταγών");
+    private static final JButton showRecipesButton = new JButton("Εμφάνιση Συνταγής");
+    private static final JButton shoppingListButton = new JButton("Λίστα Αγορών");
+    private static final JButton executeRecipeButton = new JButton("Εκτέλεση Συνταγής");
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
@@ -30,15 +33,10 @@ public class AppGui {
             JScrollPane scrollPane = new JScrollPane(recipeList);
             scrollPane.setPreferredSize(new Dimension(300, 500));
 
-            // Ενεργοποίηση επιλογής πολλαπλών συνταγών στην λίστα
-            recipeList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-
-            // Δημιουργία buttons
-            JButton loadRecipesButton = new JButton("Φόρτωση Συνταγών");
-            JButton showRecipesButton = new JButton("Εμφάνιση Συνταγής");
-            JButton shoppingListButton = new JButton("Λίστα Αγορών");
-            JButton executeRecipeButton = new JButton("Εκτέλεση Συνταγής");
-
+            // Απενεργοποίηση των κουμπιών στην εκκίνηση της εφαρμογής
+            showRecipesButton.setEnabled(false);
+            shoppingListButton.setEnabled(false);
+            executeRecipeButton.setEnabled(false);
 
             // Προσθήκη listeners στα κουμπιά
             showRecipesButton.addActionListener(e -> showRecipes());
@@ -57,6 +55,7 @@ public class AppGui {
             frame.add(panel);
             frame.setVisible(true);
 
+
         });
     }
 
@@ -64,6 +63,9 @@ public class AppGui {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setMultiSelectionEnabled(true);
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
+        // Ενεργοποίηση επιλογής πολλαπλών συνταγών στην λίστα
+        recipeList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
         int returnValue = fileChooser.showOpenDialog(null);
         if (returnValue == JFileChooser.APPROVE_OPTION) {
@@ -73,37 +75,51 @@ public class AppGui {
                     recipeListModel.addElement(file);
                 }
             }
+
+            //Ενεργοποίηση των κουμπιών αφού έχει προστεθεί αρχείο στην λίστα
+            showRecipesButton.setEnabled(true);
+            shoppingListButton.setEnabled(true);
+            executeRecipeButton.setEnabled(true);
         }
     }
 
 
     private static void showRecipes() {
             File selectedFile = recipeList.getSelectedValue();
-            String filePath = selectedFile.getAbsolutePath();
-            System.out.println("Επιλεγμένο αρχείο: " + filePath);
 
-            // Κώδικας για την εμφάνιση συνταγών
-            try {
-                Extractor extractor = new Extractor();
-                String content = extractor.readFileContent(filePath);
-                extractor.setFilePath(filePath);
-                //PASS this test print all content from file
-                System.out.println(content);
-                extractor.ExtractIngredieant(content);
-                extractor.ExtractCookware(content);
-                extractor.ExtractTime(content);
-                extractor.ExtractStep();
+            if (selectedFile != null) {
 
-                JTextArea textArea = new JTextArea(extractor.getFormattedOutput());
-                textArea.setEditable(false);
-                JScrollPane scrollPane = new JScrollPane(textArea);
-                scrollPane.setPreferredSize(new Dimension(500, 300));
+                String filePath = selectedFile.getAbsolutePath();
+                System.out.println("Επιλεγμένο αρχείο: " + filePath);
 
-                JOptionPane.showMessageDialog(null, scrollPane, "Συνταγές", JOptionPane.INFORMATION_MESSAGE);
-            }catch (Exception e){
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(null, "Σφάλμα κατά την επεξεργασία αρχείου: " + e.getMessage(), "Σφάλμα", JOptionPane.ERROR_MESSAGE);
+                // Κώδικας για την εμφάνιση συνταγών
+                try {
+
+                    Extractor extractor = new Extractor();
+                    String content = extractor.readFileContent(filePath);
+                    extractor.setFilePath(filePath);
+                    //PASS this test print all content from file
+                    System.out.println(content);
+                    extractor.ExtractIngredieant(content);
+                    extractor.ExtractCookware(content);
+                    extractor.ExtractTime(content);
+                    extractor.ExtractStep();
+
+                    JTextArea textArea = new JTextArea(extractor.getFormattedOutput());
+                    textArea.setEditable(false);
+                    JScrollPane scrollPane = new JScrollPane(textArea);
+                    scrollPane.setPreferredSize(new Dimension(500, 300));
+
+                    JOptionPane.showMessageDialog(null, scrollPane, "Συνταγές", JOptionPane.INFORMATION_MESSAGE);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    JOptionPane.showMessageDialog(null, "Σφάλμα κατά την επεξεργασία αρχείου: " + e.getMessage(), "Σφάλμα", JOptionPane.ERROR_MESSAGE);
+                }
+            }else{
+                JOptionPane.showMessageDialog(null, "Επιλέξτε αρχείο προς άνοιγμα πρώτα. ", "Σφάλμα", JOptionPane.WARNING_MESSAGE);
             }
+
     }
 
     private static void showShoppingList() {
@@ -196,6 +212,7 @@ public class AppGui {
                                     countdown.addNotifier(new Notifier() {
                                         @Override
                                         public void finished(Countdown countdown) {
+                                            JOptionPane.showMessageDialog(null, "Η αντίστροφη μέτρηση ολοκληρώθηκε. Μπορείτε να προχωρήσετε στο επόμενο βήμα", "Επιτυχία", JOptionPane.INFORMATION_MESSAGE);
                                         }
                                     });
                                 }
@@ -220,7 +237,6 @@ public class AppGui {
                                                 public void actionPerformed(ActionEvent actionEvent) {
                                                     countdown.stop();
                                                     ((Timer) e.getSource()).stop();
-                                                    JOptionPane.showMessageDialog(null, "Η συνταγή ολοκληρώθηκε!", "Επιτυχία", JOptionPane.INFORMATION_MESSAGE);
                                                     frame.dispose();
                                                 }
                                             });

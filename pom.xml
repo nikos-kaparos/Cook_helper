@@ -31,7 +31,7 @@
                     <archive>
                         <manifest>
                             <!-- Ορισμός της κύριας κλάσης -->
-                            <mainClass>org.example.Main</mainClass>
+                            <mainClass>org.example.AppGui</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
