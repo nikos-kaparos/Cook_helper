@@ -1,4 +1,4 @@
-# Recipe-Handler terminal version
+# Recipe-Handler terminal and App version
 
 This repository demonstrates a basic java application that scans recipe files with ".cook" format.
 ## Installation
