@@ -30,6 +30,5 @@ java -jar OOP2_PROJECT-1.0-SNAPSHOT.jar -list <file1> <file2>
 
 
 ## Technologies
-
 -   Java 21
 -   Maven 3.3.0
